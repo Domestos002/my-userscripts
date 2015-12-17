@@ -8,7 +8,7 @@
 // @grant        none
 // ==/UserScript==
 
-(function () {
+(function (view) {
   'use strict';
 
   var __DEBUG__ = false;
@@ -30,14 +30,14 @@
 
   if (![$run, $reset].every(Boolean)) return;
 
-  window.addEventListener('keydown', function (event) {
+  view.addEventListener('keydown', function (event) {
     if (
       event.metaKey &&
       event.keyCode === KEYCODES.ENTER
     ) {
       event.preventDefault();
-      if (window.minimized) {
-        window.toggleMinimize(true);
+      if (view.minimized) {
+        view.toggleMinimize(true);
         log('Show the code editor...');
       } else {
         $run.click();
