@@ -8,7 +8,7 @@
 // @grant        none
 // ==/UserScript==
 
-(function (view) {
+(function () {
   'use strict';
 
   var __DEBUG__ = false;
@@ -30,14 +30,14 @@
 
   if (![$run, $reset].every(Boolean)) return;
 
-  view.addEventListener('keydown', function (event) {
+  window.addEventListener('keydown', function (event) {
     if (
       event.metaKey &&
       event.keyCode === KEYCODES.ENTER
     ) {
       event.preventDefault();
-      if (view.minimized) {
-        view.toggleMinimize(true);
+      if (window.minimized) {
+        window.toggleMinimize(true);
         log('Show the code editor...');
       } else {
         $run.click();
@@ -57,4 +57,4 @@
   });
 
   log('Learn C Shortcuts have been setup.');
-})(this);
+})();
