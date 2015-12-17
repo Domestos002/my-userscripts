@@ -7,7 +7,6 @@
 // @match        http://www.learn-c.org/*
 // @grant        none
 // ==/UserScript==
-/* jshint -W097 */
 
 (function () {
   'use strict';
