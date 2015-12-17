@@ -1,0 +1,10 @@
+{
+  "extends": "airbnb/legacy",
+  "rules": {
+    "func-names": 0,
+    "strict": 0,
+    "no-console": 0,
+    "vars-on-top": 0,
+    "brace-style": 0
+  }
+}
