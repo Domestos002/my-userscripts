@@ -12,7 +12,7 @@
 (function () {
   'use strict';
 
-  var __DEBUG__ = true;
+  var __DEBUG__ = false;
 
   var $ = document.querySelector.bind(document);
 
