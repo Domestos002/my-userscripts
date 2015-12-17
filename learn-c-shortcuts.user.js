@@ -36,8 +36,13 @@
       event.keyCode === KEYCODES.ENTER
     ) {
       event.preventDefault();
-      $run.click();
-      log('Run...');
+      if (window.minimized) {
+        window.toggleMinimize(true);
+        log('Show the code editor...');
+      } else {
+        $run.click();
+        log('Run...');
+      }
     }
 
     else if (
