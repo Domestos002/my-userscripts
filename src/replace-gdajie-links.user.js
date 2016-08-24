@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Replace Gdajie Links
 // @namespace    http://riophae.com/
-// @version      0.1.0
+// @version      0.1.1
 // @description  将 gdajie.com 页面的下载链接替换为真正的 ed2k:// 链接
 // @author       Riophae Lee
 // @match        http://www.verycd.gdajie.com/topics/*
