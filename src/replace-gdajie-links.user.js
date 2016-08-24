@@ -11,7 +11,7 @@
 (function () {
   'use strict';
 
-  var DEBUG = true;
+  var DEBUG = false;
   var log = function () {
     if (DEBUG) console.log.apply(console, arguments);
   };
@@ -52,6 +52,7 @@
     temp.select();
     document.execCommand('copy');
     document.body.removeChild(temp);
+    log('Text has been copied to clipboard!\n' + text);
   }
 
   function fetchRealLink(rawLinkElement) {
