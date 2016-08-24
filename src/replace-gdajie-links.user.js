@@ -62,6 +62,13 @@
       marginRight: '5px',
       float: 'left',
     });
+    var tip = document.createElement('span');
+    tip.textContent = '…';
+    Object.assign(tip.style, {
+      color: 'rgba(0, 0, 0, .25)',
+      fontSize: '12px',
+    });
+    insertAfter(tip, rawLinkElement);
 
     return fetch(rawLinkElement.href)
       .then(function (resp) {
@@ -80,13 +87,7 @@
         log('Found ed2k link: ', ed2kLink);
         rawLinkElement.href = ed2kLink;
         realEd2kLinks.push(ed2kLink);
-        var tip = document.createElement('span');
         tip.textContent = '✔';
-        Object.assign(tip.style, {
-          color: 'rgba(0, 0, 0, .25)',
-          fontSize: '12px',
-        });
-        insertAfter(tip, rawLinkElement);
         resolved++;
       })
       .catch(function (err) {
