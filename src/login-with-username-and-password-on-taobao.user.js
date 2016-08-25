@@ -12,7 +12,6 @@
   'use strict';
 
   var $ = document.querySelector.bind(document);
-
   var waitFor = function (checker, worker) {
     if (checker()) {
       worker();
