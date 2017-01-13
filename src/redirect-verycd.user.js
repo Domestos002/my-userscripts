@@ -9,7 +9,7 @@
 // ==/UserScript==
 
 (function () {
-  'use strict';
+  'use strict'
 
-  location.href = location.href.replace('verycd.com', 'verycd.gdajie.com');
-})();
+  location.href = location.href.replace('verycd.com', 'verycd.gdajie.com')
+})()

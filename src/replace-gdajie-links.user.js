@@ -9,50 +9,50 @@
 // ==/UserScript==
 
 (function () {
-  'use strict';
+  'use strict'
 
-  var DEBUG = false;
-  var log = function () {
-    if (DEBUG) console.log.apply(console, arguments);
-  };
+  const DEBUG = false
+  const log = function () {
+    if (DEBUG) console.log.apply(console, arguments)
+  }
 
-  var pipe = function (fns) {
+  const pipe = function (fns) {
     return function (initialVal) {
-      return fns.reduce(function (val, fn) { return fn(val); }, initialVal);
-    };
-  };
-  var toArray = Function.call.bind([].slice);
-  var $ = document.querySelector.bind(document);
-  var $$ = pipe([
+      return fns.reduce(function (val, fn) { return fn(val) }, initialVal)
+    }
+  }
+  const toArray = Function.call.bind([].slice)
+  const $ = document.querySelector.bind(document)
+  const $$ = pipe([
     document.querySelectorAll.bind(document),
     toArray,
-  ]);
+  ])
 
-  var rawLinkElements = $$('[href^="http://www.verycd.gdajie.com/detail.htm?id="]');
-  if (!rawLinkElements.length) return;
+  const rawLinkElements = $$('[href^="http://www.verycd.gdajie.com/detail.htm?id="]')
+  if (!rawLinkElements.length) return
 
-  var re = /下载地址： (ed2k:\/\/.+\/)<\/span>/;
-  var resolved = 0;
-  var realEd2kLinks = [];
+  const re = /下载地址： (ed2k:\/\/.+\/)<\/span>/
+  let resolved = 0
+  const realEd2kLinks = []
 
   function insertAfter(newNode, referenceNode) {
-    referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+    referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling)
   }
 
   function copyText(text) {
-    var temp = document.createElement('textarea');
-    temp.textContent = text;
+    const temp = document.createElement('textarea')
+    temp.textContent = text
     Object.assign(temp.style, {
       overflow: 'hidden',
       display: 'block',
       width: 0,
       height: 0,
-    });
-    document.body.appendChild(temp);
-    temp.select();
-    document.execCommand('copy');
-    document.body.removeChild(temp);
-    log('Text has been copied to clipboard!\n' + text);
+    })
+    document.body.appendChild(temp)
+    temp.select()
+    document.execCommand('copy')
+    document.body.removeChild(temp)
+    log('Text has been copied to clipboard!\n' + text)
   }
 
   function fetchRealLink(rawLinkElement) {
@@ -61,57 +61,57 @@
       width: 'auto',
       marginRight: '5px',
       float: 'left',
-    });
-    var tip = document.createElement('span');
-    tip.textContent = '…';
+    })
+    const tip = document.createElement('span')
+    tip.textContent = '…'
     Object.assign(tip.style, {
       color: 'rgba(0, 0, 0, .25)',
       fontSize: '12px',
-    });
-    insertAfter(tip, rawLinkElement);
+    })
+    insertAfter(tip, rawLinkElement)
 
     return fetch(rawLinkElement.href)
       .then(function (resp) {
-        if (resp.ok) return resp;
-        throw new Error('Failed to fetch');
+        if (resp.ok) return resp
+        throw new Error('Failed to fetch')
       })
       .then(function (resp) {
-        return resp.text();
+        return resp.text()
       })
       .then(function (html) {
-        var result = html.match(re);
-        if (result) return result[1];
-        throw new Error('ed2k link not found!');
+        const result = html.match(re)
+        if (result) return result[1]
+        throw new Error('ed2k link not found!')
       })
       .then(function (ed2kLink) {
-        log('Found ed2k link: ', ed2kLink);
-        rawLinkElement.href = ed2kLink;
-        realEd2kLinks.push(ed2kLink);
-        tip.textContent = '✔';
-        resolved++;
+        log('Found ed2k link: ', ed2kLink)
+        rawLinkElement.href = ed2kLink
+        realEd2kLinks.push(ed2kLink)
+        tip.textContent = '✔'
+        resolved++
       })
       .catch(function (err) {
         log('Error occured while processing item `' +
-          rawLinkElement.textContent + '`: ' + err.message);
-      });
+          rawLinkElement.textContent + '`: ' + err.message)
+      })
   }
 
   function addCopyAllButton() {
-    var btn = document.createElement('button');
-    btn.textContent = '拷贝所有下载链接';
+    const btn = document.createElement('button')
+    btn.textContent = '拷贝所有下载链接'
     btn.addEventListener('click', function (evt) {
-      evt.preventDefault();
-      copyText(realEd2kLinks.join('\n'));
-    });
-    insertAfter(btn, $('#emuleFile'));
+      evt.preventDefault()
+      copyText(realEd2kLinks.join('\n'))
+    })
+    insertAfter(btn, $('#emuleFile'))
   }
 
   rawLinkElements
     .reduce(function (p, rawLinkElement) {
-      return p.then(function () { return fetchRealLink(rawLinkElement); });
+      return p.then(function () { return fetchRealLink(rawLinkElement) })
     }, Promise.resolve())
     .then(function () {
-      log('Done. ' + resolved + ' link(s) have been successfully resolved.');
-      addCopyAllButton();
-    });
-})();
+      log('Done. ' + resolved + ' link(s) have been successfully resolved.')
+      addCopyAllButton()
+    })
+})()

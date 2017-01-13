@@ -9,39 +9,39 @@
 // ==/UserScript==
 
 (function () {
-  'use strict';
+  'use strict'
 
-  var __DEBUG__ = false;
+  const __DEBUG__ = false
 
-  var $ = document.querySelector.bind(document);
+  const $ = document.querySelector.bind(document)
 
   function log() {
-    if (!__DEBUG__) return;
-    console.log.apply(console, arguments);
+    if (!__DEBUG__) return
+    console.log.apply(console, arguments)
   }
 
-  var $run = $('#run-button');
-  var $reset = $('#reset-button');
+  const $run = $('#run-button')
+  const $reset = $('#reset-button')
 
-  var KEYCODES = {
+  const KEYCODES = {
     ENTER: 13,
     R: 82,
-  };
+  }
 
-  if (![$run, $reset].every(Boolean)) return;
+  if (![$run, $reset].every(Boolean)) return
 
   window.addEventListener('keydown', function (event) {
     if (
       event.metaKey &&
       event.keyCode === KEYCODES.ENTER
     ) {
-      event.preventDefault();
+      event.preventDefault()
       if (window.minimized) {
-        window.toggleMinimize(true);
-        log('Show the code editor...');
+        window.toggleMinimize(true)
+        log('Show the code editor...')
       } else {
-        $run.click();
-        log('Run...');
+        $run.click()
+        log('Run...')
       }
     }
 
@@ -50,11 +50,11 @@
       event.ctrlKey &&
       event.keyCode === KEYCODES.R
     ) {
-      event.preventDefault();
-      $reset.click();
-      log('Reset...');
+      event.preventDefault()
+      $reset.click()
+      log('Reset...')
     }
-  });
+  })
 
-  log('Learn C Shortcuts have been setup.');
-})();
+  log('Learn C Shortcuts have been setup.')
+})()

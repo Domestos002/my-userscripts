@@ -9,22 +9,22 @@
 // ==/UserScript==
 
 (function () {
-  'use strict';
+  'use strict'
 
-  var $ = document.querySelector.bind(document);
-  var waitFor = function (checker, worker) {
+  const $ = document.querySelector.bind(document)
+  const waitFor = function (checker, worker) {
     if (checker()) {
-      worker();
+      worker()
     } else {
       setTimeout(function () {
-        waitFor(checker, worker);
-      }, 16);
+        waitFor(checker, worker)
+      }, 16)
     }
-  };
+  }
 
   waitFor(function () {
-    return $('.login-box.no-longlogin.module-quick');
+    return $('.login-box.no-longlogin.module-quick')
   }, function () {
-    $('#J_Quick2Static').click();
-  });
-})();
+    $('#J_Quick2Static').click()
+  })
+})()
