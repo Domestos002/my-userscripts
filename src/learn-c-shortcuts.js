@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Learn C Shortcuts
-// @namespace    http://riophae.com/
+// @namespace    https://riophae.com/
 // @version      0.1.3
 // @description  给 Learn C 网站的按钮添加快捷键
 // @author       Riophae Lee

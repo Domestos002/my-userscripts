@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Log-in with username & password on Taobao
-// @namespace    http://riophae.com/
+// @namespace    https://riophae.com/
 // @version      0.1.0
 // @description  在淘宝登录页面，自动切换到使用用户名、密码登录
 // @author       riophae
@@ -8,7 +8,6 @@
 // @grant        none
 // ==/UserScript==
 
-(function () {
 const $ = document.querySelector.bind(document)
 const waitFor = function (checker, worker) {
   if (checker()) {
@@ -25,4 +24,3 @@ waitFor(() => {
 }, () => {
   $('#J_Quick2Static').click()
 })
-})()

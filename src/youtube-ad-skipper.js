@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         YouTube Ad Skipper
-// @namespace    http://riophae.com/
+// @namespace    https://riophae.com/
 // @version      0.1
 // @description  Automatically skip YouTube ads.
 // @author       Riophae Lee

@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Zhihu Userpage Activity First
-// @namespace    http://riophae.com/
+// @namespace    https://riophae.com/
 // @version      0.1
 // @description  Show activity tab first when visiting user-page
 // @author       Riophae Lee

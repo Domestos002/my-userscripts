@@ -1,13 +1,27 @@
 {
   "name": "my-userscripts",
   "scripts": {
+    "cleanup": "rm -rf dist",
+    "dev": "npm run cleanup && rollup --watch --config build/config.js",
+    "build": "npm run cleanup && rollup --config build/config.js",
     "lint": "eslint .",
     "test": "npm run lint"
   },
   "private": true,
-  "devDependencies": {
+  "dependencies": {
+    "element-ready": "^4.0.0",
     "eslint": "^5.16.0",
     "eslint-config-riophae": "^0.6.2",
-    "eslint-plugin-import": "^2.18.0"
+    "eslint-plugin-import": "^2.18.0",
+    "ls": "^0.2.1",
+    "magic-string": "^0.25.1",
+    "rollup": "^1.16.2",
+    "rollup-plugin-commonjs": "^10.0.0",
+    "rollup-plugin-node-builtins": "^2.1.2",
+    "rollup-plugin-node-globals": "^1.4.0",
+    "rollup-plugin-node-resolve": "^5.1.0",
+    "rollup-plugin-userscript-css": "^1.2.0",
+    "select-dom": "^5.1.0",
+    "tinydate": "^1.1.0"
   }
 }

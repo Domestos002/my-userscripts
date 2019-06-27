@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Redirect VeryCD Pages
-// @namespace    http://riophae.com/
+// @namespace    https://riophae.com/
 // @version      0.1.0
 // @description  由于 VeryCD 不再提供资源下载链接，跳转到 gdajie.com
 // @author       Riophae Lee
@@ -8,6 +8,4 @@
 // @grant        none
 // ==/UserScript==
 
-(function () {
 window.location.href = window.location.href.replace('verycd.com', 'verycd.gdajie.com')
-})()
