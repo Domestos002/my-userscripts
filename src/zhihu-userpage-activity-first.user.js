@@ -16,9 +16,9 @@ const waitFor = (checker, worker) =>
 const $ = document.querySelector.bind(document)
 
 const re = /\/people\/[a-z0-9-]+$/i
-if (re.test(location.pathname)) {
+if (re.test(window.location.pathname)) {
   waitFor(
     () => $('a.Tabs-link.is-active[href$="/answers"]'),
-    () => $('.ProfileMain-tabs li a').click()
+    () => $('.ProfileMain-tabs li a').click(),
   )
 }

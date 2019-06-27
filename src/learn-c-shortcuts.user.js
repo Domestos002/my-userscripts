@@ -9,52 +9,48 @@
 // ==/UserScript==
 
 (function () {
-  'use strict'
+const __DEBUG__ = false
 
-  const __DEBUG__ = false
+const $ = document.querySelector.bind(document)
 
-  const $ = document.querySelector.bind(document)
+function log(...args) {
+  if (!__DEBUG__) return
+  console.log(...args)
+}
 
-  function log() {
-    if (!__DEBUG__) return
-    console.log.apply(console, arguments)
-  }
+const $run = $('#run-button')
+const $reset = $('#reset-button')
 
-  const $run = $('#run-button')
-  const $reset = $('#reset-button')
+const KEYCODES = {
+  ENTER: 13,
+  R: 82,
+}
 
-  const KEYCODES = {
-    ENTER: 13,
-    R: 82,
-  }
+if (![ $run, $reset ].every(Boolean)) return
 
-  if (![$run, $reset].every(Boolean)) return
-
-  window.addEventListener('keydown', function (event) {
-    if (
-      event.metaKey &&
+window.addEventListener('keydown', event => {
+  if (
+    event.metaKey &&
       event.keyCode === KEYCODES.ENTER
-    ) {
-      event.preventDefault()
-      if (window.minimized) {
-        window.toggleMinimize(true)
-        log('Show the code editor...')
-      } else {
-        $run.click()
-        log('Run...')
-      }
+  ) {
+    event.preventDefault()
+    if (window.minimized) {
+      window.toggleMinimize(true)
+      log('Show the code editor...')
+    } else {
+      $run.click()
+      log('Run...')
     }
-
-    else if (
-      event.metaKey &&
+  } else if (
+    event.metaKey &&
       event.ctrlKey &&
       event.keyCode === KEYCODES.R
-    ) {
-      event.preventDefault()
-      $reset.click()
-      log('Reset...')
-    }
-  })
+  ) {
+    event.preventDefault()
+    $reset.click()
+    log('Reset...')
+  }
+})
 
-  log('Learn C Shortcuts have been setup.')
+log('Learn C Shortcuts have been setup.')
 })()

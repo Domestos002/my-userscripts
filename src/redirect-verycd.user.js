@@ -9,7 +9,5 @@
 // ==/UserScript==
 
 (function () {
-  'use strict'
-
-  location.href = location.href.replace('verycd.com', 'verycd.gdajie.com')
+window.location.href = window.location.href.replace('verycd.com', 'verycd.gdajie.com')
 })()

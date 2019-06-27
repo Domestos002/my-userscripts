@@ -9,22 +9,20 @@
 // ==/UserScript==
 
 (function () {
-  'use strict'
-
-  const $ = document.querySelector.bind(document)
-  const waitFor = function (checker, worker) {
-    if (checker()) {
-      worker()
-    } else {
-      setTimeout(function () {
-        waitFor(checker, worker)
-      }, 16)
-    }
+const $ = document.querySelector.bind(document)
+const waitFor = function (checker, worker) {
+  if (checker()) {
+    worker()
+  } else {
+    setTimeout(() => {
+      waitFor(checker, worker)
+    }, 16)
   }
+}
 
-  waitFor(function () {
-    return $('.login-box.no-longlogin.module-quick')
-  }, function () {
-    $('#J_Quick2Static').click()
-  })
+waitFor(() => {
+  return $('.login-box.no-longlogin.module-quick')
+}, () => {
+  $('#J_Quick2Static').click()
+})
 })()
