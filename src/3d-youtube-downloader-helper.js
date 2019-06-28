@@ -1,5 +1,5 @@
 import select from 'select-dom'
-import elementReady from 'element-ready'
+import domLoaded from 'dom-loaded'
 
 // ==UserScript==
 // @name        3D Youtube Downloader Helper
@@ -33,6 +33,30 @@ function memoize(fn) {
     return value
   }
 }
+
+const tolerantElementReady = (() => {
+let readyTime = 0
+
+domLoaded.then(() => readyTime = Date.now())
+
+return selector => new Promise(resolve => {
+  const check = () => {
+    const element = select(selector)
+
+    if (element) {
+      return resolve(element)
+    }
+
+    if (readyTime && readyTime - Date.now() > 15 * 1000) {
+      return resolve()
+    }
+
+    requestAnimationFrame(check)
+  }
+
+  check()
+})
+})()
 
 const isEmbeddedVideo = () => window.location.pathname.startsWith('/embed/')
 const getLang = () => document.documentElement.getAttribute('lang')
@@ -125,12 +149,14 @@ function adjustPosition(element) {
 
   const elementRect = element.getBoundingClientRect()
   const buttonRect = getButton().getBoundingClientRect()
+  const youtubeSettingsMenuStyle = getComputedStyle(select('.ytp-settings-menu[id^="ytp-"]'))
 
   const elementCenterX = elementRect.x + elementRect.width / 2
   const buttonCenterX = buttonRect.x + buttonRect.width / 2
   const diff = elementCenterX - buttonCenterX
+  const youtubeSettingsMenuRight = parseInt(youtubeSettingsMenuStyle.right, 10)
 
-  element.style.right = Math.max(diff, 0) + 'px'
+  element.style.right = Math.max(diff, youtubeSettingsMenuRight) + 'px'
 }
 
 function showTooltip() {
@@ -231,13 +257,9 @@ function bindEventHandlers() {
 }
 
 async function init() {
-  const opts = {
-    stopOnDomReady: !isEmbeddedVideo(),
-    timeout: 30 * 1000,
-  }
   const [ youtubeSettingsMenu, youtubeRightControls ] = await Promise.all([
-    elementReady('.ytp-settings-menu', opts),
-    elementReady('.ytp-right-controls', opts),
+    tolerantElementReady('.ytp-settings-menu'),
+    tolerantElementReady('.ytp-right-controls'),
   ])
 
   if (youtubeSettingsMenu && youtubeRightControls) {

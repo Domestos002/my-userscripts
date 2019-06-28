@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        3D Youtube Downloader Helper
 // @namespace   https://riophae.com/
-// @version     2019.06.28.11.50.11
+// @version     2019.06.28.14.18.07
 // @description One click to send YouTube video url to 3D YouTube Downloader.
 // @author      Riophae Lee
 // @match       https://www.youtube.com/*
@@ -73,145 +73,6 @@
     select.all = selectAll;
     var selectDom = select;
 
-    var global$1 = (typeof global !== "undefined" ? global :
-                typeof self !== "undefined" ? self :
-                typeof window !== "undefined" ? window : {});
-
-    if (typeof global$1.setTimeout === 'function') ;
-    if (typeof global$1.clearTimeout === 'function') ;
-
-    // from https://github.com/kumavis/browser-process-hrtime/blob/master/index.js
-    var performance = global$1.performance || {};
-    var performanceNow =
-      performance.now        ||
-      performance.mozNow     ||
-      performance.msNow      ||
-      performance.oNow       ||
-      performance.webkitNow  ||
-      function(){ return (new Date()).getTime() };
-
-    function createCommonjsModule(fn, module) {
-    	return module = { exports: {} }, fn(module, module.exports), module.exports;
-    }
-
-    var manyKeysMap = createCommonjsModule(function (module) {
-
-    const getInternalKeys = Symbol('getInternalKeys');
-    const getPrivateKey = Symbol('getPrivateKey');
-    const publicKeys = Symbol('publicKeys');
-    const objectHashes = Symbol('objectHashes');
-    const symbolHashes = Symbol('symbolHashes');
-    const nullKey = Symbol('null'); // `objectHashes` key for null
-
-    let keyCounter = 0;
-    function checkKeys(keys) {
-    	if (!Array.isArray(keys)) {
-    		throw new TypeError('The keys parameter must be an array');
-    	}
-    }
-
-    module.exports = class ManyKeysMap extends Map {
-    	constructor() {
-    		super();
-
-    		this[objectHashes] = new WeakMap();
-    		this[symbolHashes] = new Map(); // https://github.com/tc39/ecma262/issues/1194
-    		this[publicKeys] = new Map();
-
-    		// eslint-disable-next-line prefer-rest-params
-    		const [pairs] = arguments; // Map compat
-    		if (pairs === null || pairs === undefined) {
-    			return;
-    		}
-
-    		if (typeof pairs[Symbol.iterator] !== 'function') {
-    			throw new TypeError(typeof pairs + ' is not iterable (cannot read property Symbol(Symbol.iterator))');
-    		}
-
-    		for (const [keys, value] of pairs) {
-    			this.set(keys, value);
-    		}
-    	}
-
-    	[getInternalKeys](keys, create = false) {
-    		const privateKey = this[getPrivateKey](keys, create);
-
-    		let publicKey;
-    		if (privateKey && this[publicKeys].has(privateKey)) {
-    			publicKey = this[publicKeys].get(privateKey);
-    		} else if (create) {
-    			publicKey = [...keys]; // Regenerate keys array to avoid external interaction
-    			this[publicKeys].set(privateKey, publicKey);
-    		}
-
-    		return {privateKey, publicKey};
-    	}
-
-    	[getPrivateKey](keys, create = false) {
-    		const privateKeys = [];
-    		for (let key of keys) {
-    			if (key === null) {
-    				key = nullKey;
-    			}
-
-    			const hashes = typeof key === 'object' || typeof key === 'function' ? objectHashes : typeof key === 'symbol' ? symbolHashes : false;
-
-    			if (!hashes) {
-    				privateKeys.push(key);
-    			} else if (this[hashes].has(key)) {
-    				privateKeys.push(this[hashes].get(key));
-    			} else if (create) {
-    				const privateKey = `@@mkm-ref-${keyCounter++}@@`;
-    				this[hashes].set(key, privateKey);
-    				privateKeys.push(privateKey);
-    			} else {
-    				return false;
-    			}
-    		}
-
-    		return JSON.stringify(privateKeys);
-    	}
-
-    	set(keys, value) {
-    		checkKeys(keys);
-    		const {publicKey} = this[getInternalKeys](keys, true);
-    		return super.set(publicKey, value);
-    	}
-
-    	get(keys) {
-    		checkKeys(keys);
-    		const {publicKey} = this[getInternalKeys](keys);
-    		return super.get(publicKey);
-    	}
-
-    	has(keys) {
-    		checkKeys(keys);
-    		const {publicKey} = this[getInternalKeys](keys);
-    		return super.has(publicKey);
-    	}
-
-    	delete(keys) {
-    		checkKeys(keys);
-    		const {publicKey, privateKey} = this[getInternalKeys](keys);
-    		return Boolean(publicKey && super.delete(publicKey) && this[publicKeys].delete(privateKey));
-    	}
-
-    	clear() {
-    		super.clear();
-    		this[symbolHashes].clear();
-    		this[publicKeys].clear();
-    	}
-
-    	get [Symbol.toStringTag]() {
-    		return 'ManyKeysMap';
-    	}
-
-    	get size() {
-    		return super.size;
-    	}
-    };
-    });
-
     const domLoaded = new Promise(resolve => {
     	if (document.readyState === 'interactive' || document.readyState === 'complete') {
     		resolve();
@@ -230,72 +91,6 @@
     // TODO: remove this in the next major version
     var default_1 = domLoaded;
     domLoaded_1.default = default_1;
-
-    const pDefer = () => {
-    	const deferred = {};
-
-    	deferred.promise = new Promise((resolve, reject) => {
-    		deferred.resolve = resolve;
-    		deferred.reject = reject;
-    	});
-
-    	return deferred;
-    };
-
-    var pDefer_1 = pDefer;
-    // TODO: Remove this for the next major release
-    var default_1$1 = pDefer;
-    pDefer_1.default = default_1$1;
-
-    const cache = new manyKeysMap();
-
-    const elementReady = (selector, options = {}) => {
-    	const {
-    		target = document,
-    		stopOnDomReady = true
-    	} = options;
-
-    	const cacheKeys = [target, selector, stopOnDomReady];
-    	const cachedPromise = cache.get(cacheKeys);
-    	if (cachedPromise) {
-    		return cachedPromise;
-    	}
-
-    	let rafId;
-    	const deferred = pDefer_1();
-    	const {promise} = deferred;
-
-    	cache.set(cacheKeys, promise);
-
-    	const stop = () => {
-    		cancelAnimationFrame(rafId);
-    		cache.delete(cacheKeys, promise);
-    		deferred.resolve();
-    	};
-
-    	if (stopOnDomReady) {
-    		(async () => {
-    			await domLoaded_1;
-    			stop();
-    		})();
-    	}
-
-    	// Interval to keep checking for it to come into the DOM
-    	(function check() {
-    		const element = target.querySelector(selector);
-
-    		if (element) {
-    			deferred.resolve(element);
-    			stop();
-    		} else {
-    			rafId = requestAnimationFrame(check);
-    		}
-    	})();
-
-    	return Object.assign(promise, {stop});
-    };
-
-    var elementReady_1 = elementReady;
 
     
 
@@ -320,6 +115,30 @@
         return value
       }
     }
+
+    const tolerantElementReady = (() => {
+    let readyTime = 0;
+
+    domLoaded_1.then(() => readyTime = Date.now());
+
+    return selector => new Promise(resolve => {
+      const check = () => {
+        const element = selectDom(selector);
+
+        if (element) {
+          return resolve(element)
+        }
+
+        if (readyTime && readyTime - Date.now() > 15 * 1000) {
+          return resolve()
+        }
+
+        requestAnimationFrame(check);
+      };
+
+      check();
+    })
+    })();
 
     const isEmbeddedVideo = () => window.location.pathname.startsWith('/embed/');
     const getLang = () => document.documentElement.getAttribute('lang');
@@ -412,12 +231,14 @@
 
       const elementRect = element.getBoundingClientRect();
       const buttonRect = getButton().getBoundingClientRect();
+      const youtubeSettingsMenuStyle = getComputedStyle(selectDom('.ytp-settings-menu[id^="ytp-"]'));
 
       const elementCenterX = elementRect.x + elementRect.width / 2;
       const buttonCenterX = buttonRect.x + buttonRect.width / 2;
       const diff = elementCenterX - buttonCenterX;
+      const youtubeSettingsMenuRight = parseInt(youtubeSettingsMenuStyle.right, 10);
 
-      element.style.right = Math.max(diff, 0) + 'px';
+      element.style.right = Math.max(diff, youtubeSettingsMenuRight) + 'px';
     }
 
     function showTooltip() {
@@ -518,13 +339,9 @@
     }
 
     async function init() {
-      const opts = {
-        stopOnDomReady: !isEmbeddedVideo(),
-        timeout: 30 * 1000,
-      };
       const [ youtubeSettingsMenu, youtubeRightControls ] = await Promise.all([
-        elementReady_1('.ytp-settings-menu', opts),
-        elementReady_1('.ytp-right-controls', opts),
+        tolerantElementReady('.ytp-settings-menu'),
+        tolerantElementReady('.ytp-right-controls'),
       ]);
 
       if (youtubeSettingsMenu && youtubeRightControls) {
