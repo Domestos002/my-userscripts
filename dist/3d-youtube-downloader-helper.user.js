@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        3D Youtube Downloader Helper
 // @namespace   https://riophae.com/
-// @version     2019.06.28.14.18.07
+// @version     0.1.1
 // @description One click to send YouTube video url to 3D YouTube Downloader.
 // @author      Riophae Lee
 // @match       https://www.youtube.com/*
@@ -140,6 +140,7 @@
     })
     })();
 
+    const isWindowsOS = () => navigator.platform === 'Win32';
     const isEmbeddedVideo = () => window.location.pathname.startsWith('/embed/');
     const getLang = () => document.documentElement.getAttribute('lang');
     const getVideoId = () => isEmbeddedVideo() // eslint-disable-line no-confusing-arrow
@@ -339,6 +340,10 @@
     }
 
     async function init() {
+      if (!isWindowsOS()) {
+        return
+      }
+
       const [ youtubeSettingsMenu, youtubeRightControls ] = await Promise.all([
         tolerantElementReady('.ytp-settings-menu'),
         tolerantElementReady('.ytp-right-controls'),
