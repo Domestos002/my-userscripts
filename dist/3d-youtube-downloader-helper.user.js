@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        3D Youtube Downloader Helper
 // @namespace   https://riophae.com/
-// @version     0.1.2
+// @version     0.1.3
 // @description One click to send YouTube video url to 3D YouTube Downloader.
 // @author      Riophae Lee
 // @match       https://www.youtube.com/*
@@ -277,6 +277,7 @@
     const ID_SUFFIX = '3d-youtube-downloader-helper';
 
     let isMenuOpen = false;
+    let isTooltipShown = false;
     let justOpenedMenu = false;
 
     function memoize(fn) {
@@ -398,6 +399,9 @@
     }
 
     function showTooltip() {
+      if (isTooltipShown) return
+      isTooltipShown = true;
+
       getTooltip().style.opacity = '1';
       adjustPosition(getTooltip());
 
@@ -407,6 +411,9 @@
     }
 
     function hideTooltip() {
+      if (!isTooltipShown) return
+      isTooltipShown = false;
+
       getTooltip().style.opacity = '0';
     }
 
@@ -428,7 +435,9 @@
     }
 
     function showMenu() {
+      if (isMenuOpen) return
       isMenuOpen = true;
+
       getMenu().style.opacity = '1';
       getMenu().style.display = '';
 
@@ -444,7 +453,9 @@
     }
 
     function hideMenu() {
+      if (!isMenuOpen) return
       isMenuOpen = false;
+
       getMenu().style.opacity = '0';
       getMenu().addEventListener(
         'transitionend',
@@ -468,6 +479,17 @@
 
         hideTooltip();
         showMenu();
+      });
+
+      getButton().addEventListener('contextmenu', event => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        hideTooltip();
+        hideMenu();
+
+        setDownloadUrls();
+        getDownloadLink().click();
       });
 
       getButton().addEventListener('mouseenter', () => {
