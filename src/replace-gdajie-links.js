@@ -37,10 +37,6 @@
   let resolved = 0
   const realEd2kLinks = []
 
-  function insertAfter(newNode, referenceNode) {
-    referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling)
-  }
-
   function copyText(text) {
     const temp = document.createElement('textarea')
     temp.textContent = text
@@ -50,7 +46,7 @@
       width: 0,
       height: 0,
     })
-    document.body.appendChild(temp)
+    document.body.append(temp)
     temp.select()
     document.execCommand('copy')
     document.body.removeChild(temp)
@@ -70,7 +66,7 @@
       color: 'rgba(0, 0, 0, .25)',
       fontSize: '12px',
     })
-    insertAfter(tip, rawLinkElement)
+    rawLinkElement.after(tip)
 
     return fetch(rawLinkElement.href)
       .then(resp => {
@@ -105,7 +101,7 @@
       evt.preventDefault()
       copyText(realEd2kLinks.join('\n'))
     })
-    insertAfter(btn, $('#emuleFile'))
+    $('#emuleFile').after(btn)
   }
 
   rawLinkElements

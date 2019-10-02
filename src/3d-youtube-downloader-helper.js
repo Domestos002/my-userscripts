@@ -185,13 +185,16 @@ function adjustMenuPosition() {
 function hideMenu() {
   isMenuOpen = false
   getMenu().style.opacity = '0'
-
-  getMenu().addEventListener('transitionend', event => {
-    if (event.propertyName === 'opacity' && getMenu().style.opacity === '0') {
-      getMenu().style.display = 'none'
-      getMenu().style.opacity = ''
-    }
-  }, { once: true })
+  getMenu().addEventListener(
+    'transitionend',
+    event => {
+      if (event.propertyName === 'opacity' && getMenu().style.opacity === '0') {
+        getMenu().style.display = 'none'
+        getMenu().style.opacity = ''
+      }
+    },
+    { once: true },
+  )
 }
 
 function bindEventHandlers() {

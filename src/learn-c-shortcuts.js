@@ -8,6 +8,8 @@
 // @grant        none
 // ==/UserScript==
 
+/* eslint-disable unicorn/prefer-event-key */
+
 (function () {
   const __DEBUG__ = false
 

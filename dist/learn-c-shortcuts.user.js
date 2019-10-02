@@ -13,50 +13,52 @@
 
   
 
+  /* eslint-disable unicorn/prefer-event-key */
+
   (function () {
 
-  const $ = document.querySelector.bind(document);
+    const $ = document.querySelector.bind(document);
 
-  function log(...args) {
-    return
-    console.log(...args);
-  }
+    function log(...args) {
+      return
+      console.log(...args);
+    }
 
-  const $run = $('#run-button');
-  const $reset = $('#reset-button');
+    const $run = $('#run-button');
+    const $reset = $('#reset-button');
 
-  const KEYCODES = {
-    ENTER: 13,
-    R: 82,
-  };
+    const KEYCODES = {
+      ENTER: 13,
+      R: 82,
+    };
 
-  if (![ $run, $reset ].every(Boolean)) return
+    if (![ $run, $reset ].every(Boolean)) return
 
-  window.addEventListener('keydown', event => {
-    if (
-      event.metaKey &&
+    window.addEventListener('keydown', event => {
+      if (
+        event.metaKey &&
         event.keyCode === KEYCODES.ENTER
-    ) {
-      event.preventDefault();
-      if (window.minimized) {
-        window.toggleMinimize(true);
-        log('Show the code editor...');
-      } else {
-        $run.click();
-        log('Run...');
-      }
-    } else if (
-      event.metaKey &&
+      ) {
+        event.preventDefault();
+        if (window.minimized) {
+          window.toggleMinimize(true);
+          log('Show the code editor...');
+        } else {
+          $run.click();
+          log('Run...');
+        }
+      } else if (
+        event.metaKey &&
         event.ctrlKey &&
         event.keyCode === KEYCODES.R
-    ) {
-      event.preventDefault();
-      $reset.click();
-      log('Reset...');
-    }
-  });
+      ) {
+        event.preventDefault();
+        $reset.click();
+        log('Reset...');
+      }
+    });
 
-  log('Learn C Shortcuts have been setup.');
+    log('Learn C Shortcuts have been setup.');
   })();
 
 }());
