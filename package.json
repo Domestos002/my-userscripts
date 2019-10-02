@@ -9,7 +9,6 @@
   },
   "private": true,
   "dependencies": {
-    "dom-loaded": "^2.0.0",
     "element-ready": "^4.0.0",
     "eslint": "^6.5.1",
     "eslint-config-riophae": "^0.9.1",

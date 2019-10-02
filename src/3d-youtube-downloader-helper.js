@@ -1,10 +1,10 @@
 import select from 'select-dom'
-import domLoaded from 'dom-loaded'
+import elementReady from 'element-ready'
 
 // ==UserScript==
 // @name        3D Youtube Downloader Helper
 // @namespace   https://riophae.com/
-// @version     0.1.1
+// @version     0.1.2
 // @description One click to send YouTube video url to 3D YouTube Downloader.
 // @author      Riophae Lee
 // @match       https://www.youtube.com/*
@@ -33,30 +33,6 @@ function memoize(fn) {
     return value
   }
 }
-
-const tolerantElementReady = (() => {
-  let readyTime = 0
-
-  domLoaded.then(() => readyTime = Date.now())
-
-  return selector => new Promise(resolve => {
-    const check = () => {
-      const element = select(selector)
-
-      if (element) {
-        return resolve(element)
-      }
-
-      if (readyTime && readyTime - Date.now() > 15 * 1000) {
-        return resolve()
-      }
-
-      requestAnimationFrame(check)
-    }
-
-    check()
-  })
-})()
 
 const isWindowsOS = () => navigator.platform === 'Win32'
 const isEmbeddedVideo = () => window.location.pathname.startsWith('/embed/')
@@ -263,8 +239,8 @@ async function init() {
   }
 
   const [ youtubeSettingsMenu, youtubeRightControls ] = await Promise.all([
-    tolerantElementReady('.ytp-settings-menu'),
-    tolerantElementReady('.ytp-right-controls'),
+    elementReady('.ytp-settings-menu'),
+    elementReady('.ytp-right-controls'),
   ])
 
   if (youtubeSettingsMenu && youtubeRightControls) {
