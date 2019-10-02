@@ -35,27 +35,27 @@ function memoize(fn) {
 }
 
 const tolerantElementReady = (() => {
-let readyTime = 0
+  let readyTime = 0
 
-domLoaded.then(() => readyTime = Date.now())
+  domLoaded.then(() => readyTime = Date.now())
 
-return selector => new Promise(resolve => {
-  const check = () => {
-    const element = select(selector)
+  return selector => new Promise(resolve => {
+    const check = () => {
+      const element = select(selector)
 
-    if (element) {
-      return resolve(element)
+      if (element) {
+        return resolve(element)
+      }
+
+      if (readyTime && readyTime - Date.now() > 15 * 1000) {
+        return resolve()
+      }
+
+      requestAnimationFrame(check)
     }
 
-    if (readyTime && readyTime - Date.now() > 15 * 1000) {
-      return resolve()
-    }
-
-    requestAnimationFrame(check)
-  }
-
-  check()
-})
+    check()
+  })
 })()
 
 const isWindowsOS = () => navigator.platform === 'Win32'
