@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Youtube Screenshot Button
 // @namespace   https://riophae.com/
-// @version     0.1.0
+// @version     0.1.1
 // @description Adds a button that enables you to take screenshots for YouTube videos.
 // @author      Riophae Lee
 // @match       https://www.youtube.com/*
@@ -64,24 +64,27 @@
 	// https://github.com/amio/youtube-screenshot-button
 	// (c) MIT License
 
-	function createScreenshotForVideo(video) {
-	  const canvas = document.createElement('canvas');
-	  canvas.width = video.clientWidth;
-	  canvas.height = video.clientHeight;
+	let anchor;
+	let blobUrl;
 
-	  const ctx = canvas.getContext('2d');
-	  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+	function createScreenshotBlobUrlForVideo(video) {
+	  return new Promise(resolve => {
+	    const canvas = document.createElement('canvas');
+	    canvas.width = video.clientWidth;
+	    canvas.height = video.clientHeight;
 
-	  return canvas.toDataURL()
-	}
+	    const ctx = canvas.getContext('2d');
+	    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-	function openImageInNewTab(dataURI) {
-	  const html = `<html><body><img src="${dataURI}"/></body></html>`;
-	  const newTab = window.open('', 'large');
+	    canvas.toBlob(blob => {
+	      if (blobUrl) {
+	        URL.revokeObjectURL(blobUrl);
+	      }
 
-	  newTab.document.open();
-	  newTab.document.write(html);
-	  newTab.document.close();
+	      blobUrl = URL.createObjectURL(blob);
+	      resolve();
+	    });
+	  })
 	}
 
 	async function main() {
@@ -103,10 +106,33 @@
     `;
 
 	    controls.insertAdjacentHTML('afterbegin', buttonHTML);
-	    document.getElementById('ss-btn').addEventListener('click', () => {
-	      const image = createScreenshotForVideo(video);
 
-	      openImageInNewTab(image);
+	    const screenshotButton = document.getElementById('ss-btn');
+
+	    screenshotButton.addEventListener('click', async () => {
+	      await createScreenshotBlobUrlForVideo(video);
+
+	      window.open(blobUrl, 'large');
+	    });
+
+	    screenshotButton.addEventListener('contextmenu', async event => {
+	      event.preventDefault();
+	      event.stopPropagation();
+
+	      await createScreenshotBlobUrlForVideo(video);
+
+	      if (!anchor) {
+	        anchor = document.createElement('a');
+	        anchor.download = 'youtube-screenshot.png';
+	        anchor.dataset.downloadurl = [
+	          'text/plain',
+	          anchor.download,
+	          anchor.href,
+	        ].join(':');
+	      }
+
+	      anchor.href = blobUrl;
+	      anchor.click();
 	    });
 	  }
 	}
