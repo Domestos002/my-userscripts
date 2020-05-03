@@ -19,11 +19,6 @@
 
     const $ = document.querySelector.bind(document);
 
-    function log(...args) {
-      return
-      console.log(...args);
-    }
-
     const $run = $('#run-button');
     const $reset = $('#reset-button');
 
@@ -42,10 +37,8 @@
         event.preventDefault();
         if (window.minimized) {
           window.toggleMinimize(true);
-          log('Show the code editor...');
         } else {
           $run.click();
-          log('Run...');
         }
       } else if (
         event.metaKey &&
@@ -54,11 +47,8 @@
       ) {
         event.preventDefault();
         $reset.click();
-        log('Reset...');
       }
     });
-
-    log('Learn C Shortcuts have been setup.');
   })();
 
 }());

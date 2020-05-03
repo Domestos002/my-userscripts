@@ -4,7 +4,7 @@ import domLoaded from 'dom-loaded'
 // ==UserScript==
 // @name        3D Youtube Downloader Helper
 // @namespace   https://riophae.com/
-// @version     0.1.4
+// @version     0.1.5
 // @description One click to send YouTube video url to 3D YouTube Downloader.
 // @author      Riophae Lee
 // @match       https://www.youtube.com/*
@@ -106,6 +106,7 @@ function i18n(key) {
 function insertControls(youtubeSettingsMenu, youtubeRightControls) {
   const createMenuItem = key => `
 <a id="${key}-link-${ID_SUFFIX}" class="ytp-menuitem" tabindex="0">
+  <div class="ytp-menuitem-icon"></div>
   <div class="ytp-menuitem-label" style="white-space: nowrap">${i18n(key)}</div>
   <div class="ytp-menuitem-content"></div>
 </a>

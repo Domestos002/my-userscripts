@@ -17,7 +17,6 @@
 
     const log = function (...args) {
       return
-      console.log(...args);
     };
 
     const pipe = function (fns) {
@@ -38,7 +37,6 @@
     if (!rawLinkElements.length) return
 
     const re = /下载地址： (ed2k:\/\/.+\/)<\/span>/;
-    let resolved = 0;
     const realEd2kLinks = [];
 
     function copyText(text) {
@@ -54,7 +52,6 @@
       temp.select();
       document.execCommand('copy');
       document.body.removeChild(temp);
-      log('Text has been copied to clipboard!\n' + text);
     }
 
     function fetchRealLink(rawLinkElement) {
@@ -86,11 +83,9 @@
           throw new Error('ed2k link not found!')
         })
         .then(ed2kLink => {
-          log('Found ed2k link: ', ed2kLink);
           rawLinkElement.href = ed2kLink;
           realEd2kLinks.push(ed2kLink);
           tip.textContent = '✔';
-          resolved++;
         })
         .catch(err => {
           log('Error occured while processing item `' +
@@ -115,7 +110,6 @@
         })
       }, Promise.resolve())
       .then(() => {
-        log('Done. ' + resolved + ' link(s) have been successfully resolved.');
         addCopyAllButton();
       });
   })();
