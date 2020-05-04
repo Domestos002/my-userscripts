@@ -33,7 +33,7 @@ module.exports = function metablockPlugin() {
         const contents = fs.readFileSync(entry, 'utf8')
         const { matched, start, end } = findRange(contents)
 
-        if (matched) metablock = contents.substring(start, end)
+        if (matched) metablock = contents.slice(start, end)
       }
 
       return options

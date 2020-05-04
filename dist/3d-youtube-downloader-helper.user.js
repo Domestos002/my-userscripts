@@ -23,14 +23,14 @@
         if (arguments.length === 2 && !baseElement) {
             return null;
         }
-        return (baseElement || document).querySelector(selectors);
+        return (baseElement !== null && baseElement !== void 0 ? baseElement : document).querySelector(String(selectors));
     }
     function selectLast(selectors, baseElement) {
         // Shortcut with specified-but-null baseElement
         if (arguments.length === 2 && !baseElement) {
             return null;
         }
-        const all = (baseElement || document).querySelectorAll(selectors);
+        const all = (baseElement !== null && baseElement !== void 0 ? baseElement : document).querySelectorAll(String(selectors));
         return all[all.length - 1];
     }
     /**
@@ -51,27 +51,26 @@
         }
         // Can be: select.all('selectors') or select.all('selectors', singleElementOrDocument)
         if (!baseElements || isQueryable(baseElements)) {
-            const elements = (baseElements || document).querySelectorAll(selectors);
+            const elements = (baseElements !== null && baseElements !== void 0 ? baseElements : document).querySelectorAll(String(selectors));
             return Array.apply(null, elements);
         }
         const all = [];
         for (let i = 0; i < baseElements.length; i++) {
-            const current = baseElements[i].querySelectorAll(selectors);
+            const current = baseElements[i].querySelectorAll(String(selectors));
             for (let ii = 0; ii < current.length; ii++) {
                 all.push(current[ii]);
             }
         }
         // Preserves IE11 support and performs 3x better than `...all` in Safari
-        const arr = [];
+        const array = [];
         all.forEach(function (v) {
-            arr.push(v);
+            array.push(v);
         });
-        return arr;
+        return array;
     }
     select.last = selectLast;
     select.exists = selectExists;
     select.all = selectAll;
-    var selectDom = select;
 
     const hasLoaded = () => document.readyState === 'interactive' || document.readyState === 'complete';
 
@@ -127,7 +126,7 @@
 
       return selector => new Promise(resolve => {
         const check = () => {
-          const element = selectDom(selector);
+          const element = select(selector);
 
           if (element) {
             return resolve(element)
@@ -149,18 +148,18 @@
     const getLang = () => document.documentElement.getAttribute('lang');
     const getVideoId = () => isEmbeddedVideo() // eslint-disable-line no-confusing-arrow
       ? window.location.pathname.split('/').pop()
-      : selectDom('[video-id]').getAttribute('video-id');
+      : select('[video-id]').getAttribute('video-id');
 
-    const getChromeBottom = memoize(() => selectDom('.ytp-chrome-bottom'));
-    const getDownloadButton = memoize(() => selectDom(`#button-${ID_SUFFIX}`));
-    const getSettingsButton = memoize(() => selectDom('.ytp-button.ytp-settings-button'));
-    const getTooltip = memoize(() => selectDom('.ytp-tooltip.ytp-bottom'));
-    const getTooltipText = memoize(() => selectDom('.ytp-tooltip-text'));
-    const getMenu = memoize(() => selectDom(`#menu-${ID_SUFFIX}`));
-    const getInnerMenu = memoize(() => selectDom(`#inner-menu-${ID_SUFFIX}`));
-    const getDownloadLink = memoize(() => selectDom(`#download-link-${ID_SUFFIX}`));
-    const getConvertLink = memoize(() => selectDom(`#convert-link-${ID_SUFFIX}`));
-    const getAnalyzeLink = memoize(() => selectDom(`#analyze-link-${ID_SUFFIX}`));
+    const getChromeBottom = memoize(() => select('.ytp-chrome-bottom'));
+    const getDownloadButton = memoize(() => select(`#button-${ID_SUFFIX}`));
+    const getSettingsButton = memoize(() => select('.ytp-button.ytp-settings-button'));
+    const getTooltip = memoize(() => select('.ytp-tooltip.ytp-bottom'));
+    const getTooltipText = memoize(() => select('.ytp-tooltip-text'));
+    const getMenu = memoize(() => select(`#menu-${ID_SUFFIX}`));
+    const getInnerMenu = memoize(() => select(`#inner-menu-${ID_SUFFIX}`));
+    const getDownloadLink = memoize(() => select(`#download-link-${ID_SUFFIX}`));
+    const getConvertLink = memoize(() => select(`#convert-link-${ID_SUFFIX}`));
+    const getAnalyzeLink = memoize(() => select(`#analyze-link-${ID_SUFFIX}`));
 
     const dict = {
       'en-US': {
