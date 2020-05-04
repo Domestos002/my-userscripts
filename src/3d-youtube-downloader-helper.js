@@ -4,7 +4,7 @@ import domLoaded from 'dom-loaded'
 // ==UserScript==
 // @name        3D Youtube Downloader Helper
 // @namespace   https://riophae.com/
-// @version     0.1.5
+// @version     0.1.6
 // @description One click to send YouTube video url to 3D YouTube Downloader.
 // @author      Riophae Lee
 // @match       https://www.youtube.com/*
@@ -66,8 +66,11 @@ const getVideoId = () => isEmbeddedVideo() // eslint-disable-line no-confusing-a
   ? window.location.pathname.split('/').pop()
   : select('[video-id]').getAttribute('video-id')
 
-const getButton = memoize(() => select(`#button-${ID_SUFFIX}`))
-const getTooltip = memoize(() => select(`#tooltip-${ID_SUFFIX}`))
+const getChromeBottom = memoize(() => select('.ytp-chrome-bottom'))
+const getDownloadButton = memoize(() => select(`#button-${ID_SUFFIX}`))
+const getSettingsButton = memoize(() => select('.ytp-button.ytp-settings-button'))
+const getTooltip = memoize(() => select('.ytp-tooltip.ytp-bottom'))
+const getTooltipText = memoize(() => select('.ytp-tooltip-text'))
 const getMenu = memoize(() => select(`#menu-${ID_SUFFIX}`))
 const getInnerMenu = memoize(() => select(`#inner-menu-${ID_SUFFIX}`))
 const getDownloadLink = memoize(() => select(`#download-link-${ID_SUFFIX}`))
@@ -118,18 +121,6 @@ function insertControls(youtubeSettingsMenu, youtubeRightControls) {
   </svg>
 </button>
 `
-  const tooltipHtml = `
-<div id="tooltip-${ID_SUFFIX}" class="ytp-tooltip ytp-bottom" style="opacity: 0">
-  <div class="ytp-tooltip-bg">
-    <div class="ytp-tooltip-duration"></div>
-  </div>
-  <div class="ytp-tooltip-text-wrapper">
-    <div class="ytp-tooltip-image"></div>
-    <div class="ytp-tooltip-title"></div>
-    <span class="ytp-tooltip-text">${i18n('buttonTitle')}</span>
-  </div>
-</div>
-`
   const menuHtml = `
 <div id="menu-${ID_SUFFIX}" class="ytp-popup ytp-settings-menu" style="display: none">
   <div class="ytp-panel">
@@ -143,42 +134,66 @@ function insertControls(youtubeSettingsMenu, youtubeRightControls) {
 `
 
   youtubeSettingsMenu.insertAdjacentHTML('beforebegin', menuHtml)
-  youtubeSettingsMenu.insertAdjacentHTML('beforebegin', tooltipHtml)
   youtubeRightControls.insertAdjacentHTML('afterbegin', buttonHtml)
 }
 
-function adjustPosition(element) {
-  element.style.right = '0'
+function triggerMouseEvent(element, eventType) {
+  const event = new MouseEvent(eventType)
 
-  const elementRect = element.getBoundingClientRect()
-  const buttonRect = getButton().getBoundingClientRect()
-  const youtubeSettingsMenuStyle = getComputedStyle(select('.ytp-settings-menu[id^="ytp-"]'))
+  element.dispatchEvent(event)
+}
 
-  const elementCenterX = elementRect.x + elementRect.width / 2
-  const buttonCenterX = buttonRect.x + buttonRect.width / 2
-  const diff = elementCenterX - buttonCenterX
-  const youtubeSettingsMenuRight = parseInt(youtubeSettingsMenuStyle.right, 10)
+function getEdgePosition() {
+  return parseInt(getChromeBottom().style.left, 10)
+}
 
-  element.style.right = Math.max(diff, youtubeSettingsMenuRight) + 'px'
+function adjustTooltipPosition() {
+  const calculateNormal = () => {
+    getTooltip().style.left = '0'
+
+    const offsetParentRect = getTooltip().offsetParent.getBoundingClientRect()
+    const tooltipRect = getTooltip().getBoundingClientRect()
+    const downloadButtonRect = getDownloadButton().getBoundingClientRect()
+
+    const tooltipHalfWidth = tooltipRect.width / 2
+    const buttonCenterX = downloadButtonRect.x + downloadButtonRect.width / 2
+    const normal = buttonCenterX - offsetParentRect.x - tooltipHalfWidth
+
+    return normal
+  }
+
+  const calculateEdge = () => {
+    const offsetParentRect = getTooltip().offsetParent.getBoundingClientRect()
+    const tooltipRect = getTooltip().getBoundingClientRect()
+    const edge = offsetParentRect.width - getEdgePosition() - tooltipRect.width
+
+    return edge
+  }
+
+  getTooltip().style.left = Math.min(calculateNormal(), calculateEdge()) + 'px'
 }
 
 function showTooltip() {
   if (isTooltipShown) return
   isTooltipShown = true
 
-  getTooltip().style.opacity = '1'
-  adjustPosition(getTooltip())
-
-  getMenu().style.display = ''
-  getTooltip().style.bottom = getComputedStyle(getMenu()).bottom
-  getMenu().style.display = 'none'
+  triggerMouseEvent(getSettingsButton(), 'mouseover')
+  getTooltipText().textContent = i18n('buttonTitle')
+  adjustTooltipPosition()
 }
 
 function hideTooltip() {
   if (!isTooltipShown) return
   isTooltipShown = false
 
-  getTooltip().style.opacity = '0'
+  triggerMouseEvent(getSettingsButton(), 'mouseout')
+}
+
+function immediatelyHideTooltip() {
+  if (!isTooltipShown) return
+
+  hideTooltip()
+  getTooltip().style.display = 'none'
 }
 
 function setDownloadUrls() {
@@ -213,7 +228,16 @@ function showMenu() {
 }
 
 function adjustMenuPosition() {
-  adjustPosition(getMenu())
+  getMenu().style.right = '0'
+
+  const menuRect = getMenu().getBoundingClientRect()
+  const downloadButtonRect = getDownloadButton().getBoundingClientRect()
+
+  const menuCenterX = menuRect.x + menuRect.width / 2
+  const buttonCenterX = downloadButtonRect.x + downloadButtonRect.width / 2
+  const diff = menuCenterX - buttonCenterX
+
+  getMenu().style.right = Math.max(diff, getEdgePosition()) + 'px'
 }
 
 function hideMenu() {
@@ -234,18 +258,18 @@ function hideMenu() {
 }
 
 function bindEventHandlers() {
-  getButton().addEventListener('click', () => {
+  getDownloadButton().addEventListener('click', () => {
     if (isMenuOpen) {
       return
     }
 
     justOpenedMenu = true
 
-    hideTooltip()
+    immediatelyHideTooltip()
     showMenu()
   })
 
-  getButton().addEventListener('contextmenu', event => {
+  getDownloadButton().addEventListener('contextmenu', event => {
     event.preventDefault()
     event.stopPropagation()
 
@@ -256,13 +280,13 @@ function bindEventHandlers() {
     getDownloadLink().click()
   })
 
-  getButton().addEventListener('mouseenter', () => {
+  getDownloadButton().addEventListener('mouseenter', () => {
     if (!isMenuOpen) {
       showTooltip()
     }
   })
 
-  getButton().addEventListener('mouseleave', () => {
+  getDownloadButton().addEventListener('mouseleave', () => {
     if (!isMenuOpen) {
       hideTooltip()
     }
