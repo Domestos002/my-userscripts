@@ -17,6 +17,7 @@
     "eslint-plugin-unicorn": "^15.0.0",
     "ls": "^0.2.1",
     "magic-string": "^0.25.1",
+    "noop2": "^2.0.0",
     "rollup": "^2.7.6",
     "rollup-plugin-node-builtins": "^2.1.2",
     "rollup-plugin-node-globals": "^1.4.0",
