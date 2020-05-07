@@ -4,12 +4,13 @@ import tolerantElementReady from './utils/tolerant-element-ready'
 // ==UserScript==
 // @name        Youtube Screenshot Button
 // @namespace   https://riophae.com/
-// @version     0.1.4
+// @version     0.1.5
 // @description Adds a button that enables you to take screenshots for YouTube videos.
 // @author      Riophae Lee
 // @match       https://www.youtube.com/*
 // @run-at      document-start
 // @grant       none
+// @license     MIT
 // ==/UserScript==
 
 // Based on work by Amio:

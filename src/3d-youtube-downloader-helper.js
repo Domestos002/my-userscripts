@@ -5,12 +5,13 @@ import tolerantElementReady from './utils/tolerant-element-ready'
 // ==UserScript==
 // @name        3D Youtube Downloader Helper
 // @namespace   https://riophae.com/
-// @version     0.1.8
+// @version     0.1.9
 // @description One click to send YouTube video url to 3D YouTube Downloader.
 // @author      Riophae Lee
 // @match       https://www.youtube.com/*
 // @run-at      document-start
 // @grant       GM_addStyle
+// @license     MIT
 // ==/UserScript==
 
 const FALLBACK_LANG = 'en-US'
