@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Youtube Screenshot Button
 // @namespace   https://riophae.com/
-// @version     0.1.3
+// @version     0.1.4
 // @description Adds a button that enables you to take screenshots for YouTube videos.
 // @author      Riophae Lee
 // @match       https://www.youtube.com/*
@@ -156,7 +156,6 @@
       if (hasMenu) {
         const settingsMenu = select('.ytp-settings-menu');
         const menuHtml = generateMenuHtml(menuId, menuItemGenerator, menuItems);
-        console.log(menuHtml);
 
         settingsMenu.insertAdjacentHTML('beforebegin', menuHtml);
       }

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        3D Youtube Downloader Helper
 // @namespace   https://riophae.com/
-// @version     0.1.7
+// @version     0.1.8
 // @description One click to send YouTube video url to 3D YouTube Downloader.
 // @author      Riophae Lee
 // @match       https://www.youtube.com/*
@@ -156,7 +156,6 @@
       if (hasMenu) {
         const settingsMenu = select('.ytp-settings-menu');
         const menuHtml = generateMenuHtml(menuId, menuItemGenerator, menuItems);
-        console.log(menuHtml);
 
         settingsMenu.insertAdjacentHTML('beforebegin', menuHtml);
       }

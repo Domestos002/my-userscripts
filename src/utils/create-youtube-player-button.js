@@ -79,7 +79,6 @@ export default opts => {
   if (hasMenu) {
     const settingsMenu = select('.ytp-settings-menu')
     const menuHtml = generateMenuHtml(menuId, menuItemGenerator, menuItems)
-    console.log(menuHtml)
 
     settingsMenu.insertAdjacentHTML('beforebegin', menuHtml)
   }
