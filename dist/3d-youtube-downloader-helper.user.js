@@ -387,7 +387,10 @@
       }
     }
 
-    const isWindowsOS = () => navigator.platform === 'Win32';
+    const isWindowsOS = () => [
+      'Win32',
+      'Win64', // for Pale Moon
+    ].includes(navigator.platform);
     const isEmbeddedVideo = () => window.location.pathname.startsWith('/embed/');
     const getLang = () => document.documentElement.getAttribute('lang');
     const getVideoId = () => isEmbeddedVideo() // eslint-disable-line no-confusing-arrow
