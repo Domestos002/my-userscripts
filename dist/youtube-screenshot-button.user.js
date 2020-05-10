@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Youtube Screenshot Button
 // @namespace   https://riophae.com/
-// @version     0.1.5
+// @version     0.1.6
 // @description Adds a button that enables you to take screenshots for YouTube videos.
 // @author      Riophae Lee
 // @match       https://www.youtube.com/*

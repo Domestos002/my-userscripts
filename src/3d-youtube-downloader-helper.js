@@ -6,7 +6,7 @@ import tolerantElementReady from './utils/tolerant-element-ready'
 // ==UserScript==
 // @name        3D Youtube Downloader Helper
 // @namespace   https://riophae.com/
-// @version     0.1.9
+// @version     0.1.10
 // @description One click to send YouTube video url to 3D YouTube Downloader.
 // @author      Riophae Lee
 // @match       https://www.youtube.com/*
