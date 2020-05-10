@@ -415,7 +415,7 @@
 
     function openInNewTab(blobUrl) {
       // Older versions of Greasemonkey (3.x) have both GM_openInTab and GM.openInTab.
-      // Newer versions of Greasemonkey (4.x) seems have deleted GM_openInTab, which
+      // Newer versions of Greasemonkey (4.x) seem have deleted GM_openInTab, which
       // allows opening blob: urls while GM.openInTab don't.
       // GM.openInTab is too strict even base64 urls are not allowed.
       // So we prefer GM_openInTab whenever available.
@@ -432,6 +432,7 @@
 
         anchor.href = blobUrl;
         // A popup may be blocked by the browser. Make sure to allow it.
+        // Another reason why GM_openInTab is preferred.
         anchor.click();
       }
     }
