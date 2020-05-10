@@ -1,3 +1,4 @@
+import insertCss from 'insert-css'
 import select from 'select-dom'
 import createYoutubePlayerButton from './utils/create-youtube-player-button'
 import tolerantElementReady from './utils/tolerant-element-ready'
@@ -10,7 +11,7 @@ import tolerantElementReady from './utils/tolerant-element-ready'
 // @author      Riophae Lee
 // @match       https://www.youtube.com/*
 // @run-at      document-start
-// @grant       GM_addStyle
+// @grant       none
 // @license     MIT
 // ==/UserScript==
 
@@ -83,8 +84,7 @@ function insertStyle() {
 }
 `
 
-  // eslint-disable-next-line no-undef, new-cap
-  GM_addStyle(css)
+  insertCss(css)
 }
 
 function setDownloadUrls() {
