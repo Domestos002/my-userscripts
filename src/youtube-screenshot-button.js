@@ -4,7 +4,7 @@ import tolerantElementReady from './utils/tolerant-element-ready'
 // ==UserScript==
 // @name        Youtube Screenshot Button
 // @namespace   https://riophae.com/
-// @version     0.1.6
+// @version     0.1.7
 // @description Adds a button that enables you to take screenshots for YouTube videos.
 // @author      Riophae Lee
 // @match       https://www.youtube.com/*
@@ -17,6 +17,8 @@ import tolerantElementReady from './utils/tolerant-element-ready'
 // Based on work by Amio:
 // https://github.com/amio/youtube-screenshot-button
 // (c) MIT License
+
+const $ = document.querySelector.bind(document)
 
 const BUTTON_ID = 'youtube-screenshot-button'
 
@@ -86,8 +88,82 @@ function download(blobUrl) {
   const anchor = getAnchor('download')
 
   anchor.href = blobUrl
-  anchor.download = 'youtube-screenshot.png'
+  anchor.download = getFileName()
   anchor.click()
+}
+
+function getFileName() {
+  const videoTitle = getVideoTitle()
+  const videoTime = formatVideoTime(getVideoCurrentTime()).join('-')
+  // The file name may contain invalid characters for the file system.
+  // We don't need to handle that ourself, the browser will do.
+  const fileName = [
+    'youtube-video-screenshot',
+    `[${videoTitle}]`,
+    videoTime,
+  ].join(' ') + '.png'
+
+  return fileName
+}
+
+function getVideoTitle() {
+  const titleElement = $('ytd-video-primary-info-renderer h1.title yt-formatted-string')
+  const videoTitle = titleElement && titleElement.textContent.trim()
+
+  return videoTitle
+}
+
+function getVideoCurrentTime() {
+  const videoElement = $('#ytd-player video')
+  const videoCurrentTime = videoElement
+    ? videoElement.currentTime
+    : NaN
+
+  return videoCurrentTime
+}
+
+// The video that is claimed to be the longest on YouTube:
+// https://youtu.be/04cF1m6Jxu8
+// Use it to test how this code handles the time in different situations.
+function formatVideoTime(totalSeconds) {
+  // Remove the decimal part (milliseconds).
+  // e.g. 90.2 -> 90
+  let m = Math.floor(totalSeconds)
+  let n
+
+  // Do the time format conversion.
+  let result = [ 60, 60, 24 ].map(factor => {
+    n = m % factor
+    m = (m - n) / factor
+    return n
+  })
+  result.push(m)
+  result.reverse()
+  // result => [ day, hour, minute, second ]
+
+  // Omit day or hour if 0.
+  // The minute is always kept even if 0.
+  // e.g.:
+  //   [ 0, 0 ]
+  //   [ 2, 30 ]
+  //   [ 1, 10, 45 ]
+  //   [ 4, 0, 50, 15 ]
+  while (result.length > 2 && result[0] === 0) {
+    result.shift()
+  }
+
+  // Left-pad 0 to all numbers but the first (same as YouTube).
+  // e.g.:
+  //   [ "0", "00" ]
+  //   [ "1", "00", "00" ]
+  //   [ "1", "00", "00", "00" ]
+  result = result.map((number, index) => {
+    return index > 0 && number < 10
+      ? `0${number}`
+      : String(number)
+  })
+
+  return result
 }
 
 async function main() {
