@@ -4,7 +4,7 @@ import tolerantElementReady from './utils/tolerant-element-ready'
 // ==UserScript==
 // @name        Youtube Screenshot Button
 // @namespace   https://riophae.com/
-// @version     0.1.7
+// @version     0.1.8
 // @description Adds a button that enables you to take screenshots for YouTube videos.
 // @author      Riophae Lee
 // @match       https://www.youtube.com/*
@@ -21,6 +21,7 @@ import tolerantElementReady from './utils/tolerant-element-ready'
 const $ = document.querySelector.bind(document)
 
 const BUTTON_ID = 'youtube-screenshot-button'
+const isEmbed = window.location.pathname.startsWith('/embed/')
 
 const anchorCacheMap = {}
 
@@ -107,14 +108,18 @@ function getFileName() {
 }
 
 function getVideoTitle() {
-  const titleElement = $('ytd-video-primary-info-renderer h1.title yt-formatted-string')
+  const titleElement = isEmbed
+    ? $('.ytp-title-link')
+    : $('ytd-video-primary-info-renderer h1.title yt-formatted-string')
   const videoTitle = titleElement && titleElement.textContent.trim()
 
   return videoTitle
 }
 
 function getVideoCurrentTime() {
-  const videoElement = $('#ytd-player video')
+  const videoElement = isEmbed
+    ? $('.html5-video-container video')
+    : $('#ytd-player video')
   const videoCurrentTime = videoElement
     ? videoElement.currentTime
     : NaN
@@ -127,7 +132,7 @@ function getVideoCurrentTime() {
 // Use it to test how this code handles the time in different situations.
 function formatVideoTime(totalSeconds) {
   // Remove the decimal part (milliseconds).
-  // e.g. 90.2 -> 90
+  // e.g. 90.6 -> 90
   let m = Math.floor(totalSeconds)
   let n
 
