@@ -49,7 +49,7 @@
     document.body.append(temp)
     temp.select()
     document.execCommand('copy')
-    document.body.removeChild(temp)
+    temp.remove()
     log('Text has been copied to clipboard!\n' + text)
   }
 

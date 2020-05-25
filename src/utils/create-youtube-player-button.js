@@ -36,7 +36,7 @@ function generateMenuHtml(menuId, menuItemGenerator, menuItems) {
 }
 
 function getEdgePosition() {
-  return parseInt(getChromeBottom().style.left, 10)
+  return Number.parseInt(getChromeBottom().style.left, 10)
 }
 
 function triggerMouseEvent(element, eventType) {

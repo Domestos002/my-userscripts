@@ -122,7 +122,7 @@ function getVideoCurrentTime() {
     : $('#ytd-player video')
   const videoCurrentTime = videoElement
     ? videoElement.currentTime
-    : NaN
+    : Number.NaN
 
   return videoCurrentTime
 }
